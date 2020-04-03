@@ -1,0 +1,268 @@
+#compdef pecl
+local -a options arguments
+
+# options=(
+#     "-v:increase verbosity level (default 1)"
+#     "-q:be quiet, decrease verbosity level"
+#     "-c:find user configuration in 'file'"
+#     "-C:find system configuration in 'file'"
+#     "-d:set user config variable 'foo' to 'bar'"
+#     "-D:set system config variable 'foo' to 'bar'"
+#     "-G:start in graphical (Gtk) mode"
+#     "-s:store user configuration"
+#     "-S:store system configuration"
+#     "-u:unset 'foo' in the user configuration"
+#     "-h:display help/usage (this message)"
+#     "-V:version information"
+# )
+
+arguments=(
+    'build:Build an Extension From C Source'
+    'bundle:Unpacks a Pecl Package'
+    'channel-add:Add a Channel'
+    'channel-alias:Specify an alias to a channel name'
+    'channel-delete:Remove a Channel From the List'
+    'channel-discover:Initialize a Channel from its server'
+    'channel-info:Retrieve Information on a Channel'
+    'channel-login:Connects and authenticates to remote channel server'
+    'channel-logout:Logs out from the remote channel server'
+    'channel-update:Update an Existing Channel'
+    'clear-cache:Clear Web Services Cache'
+    'config-create:Create a Default configuration file'
+    'config-get:Show One Setting'
+    'config-help:Show Information About Setting'
+    'config-set:Change Setting'
+    'config-show:Show All Settings'
+    'convert:Convert a package.xml 1.0 to package.xml 2.0 format'
+    'cvsdiff:Run a "cvs diff" for all files in a package'
+    'cvstag:Set CVS Release Tag'
+    'download:Download Package'
+    'download-all:Downloads each available package from the default channel'
+    'info:Display information about a package'
+    'install:Install Package'
+    'list:List Installed Packages In The Default Channel'
+    'list-all:List All Packages'
+    'list-channels:List Available Channels'
+    'list-files:List Files In Installed Package'
+    'list-upgrades:List Available Upgrades'
+    'login:Connects and authenticates to remote server [Deprecated in favor of channel-login]'
+    'logout:Logs out from the remote server [Deprecated in favor of channel-logout]'
+    'makerpm:Builds an RPM spec file from a PEAR package'
+    'package:Build Package'
+    'package-dependencies:Show package dependencies'
+    'package-validate:Validate Package Consistency'
+    'pickle:Build PECL Package'
+    'remote-info:Information About Remote Packages'
+    'remote-list:List Remote Packages'
+    'run-scripts:Run Post-Install Scripts bundled with a package'
+    'run-tests:Run Regression Tests'
+    'search:Search remote package database'
+    'shell-test:Shell Script Test'
+    'sign:Sign a package distribution file'
+    'svntag:Set SVN Release Tag'
+    'uninstall:Un-install Package'
+    'update-channels:Update the Channel List'
+    'upgrade:Upgrade Package'
+    "help:display help/usage"
+    'upgrade-all:Upgrade All Packages [Deprecated in favor of calling upgrade with no parameters]'
+)
+
+if [[ $#words -eq 2 ]]; then
+    _describe 'values' options -- arguments
+    return 0
+fi
+
+case $words[2] {
+    (bundle)
+    _values 'writer options' \
+        {-d,-i}'[Optional destination directory for unpacking (defaults to current path or "ext" if exists)]' \
+        '-f[Force the unpacking even if there were errors in the package]'
+    ;;
+
+    (help)
+    arguments=(
+        'options:list all options'
+        'shortcuts:list all command shortcuts'
+        'version:or "pecl version" to list version information'
+        $arguments 
+    )
+    _describe 'values' options -- arguments
+    ;;
+
+    (config-create)
+    _values 'writer options' \
+        {-w,--windows}'[create a config file for a windows install]'
+    ;;
+
+    (config-get|config-set|config-show)
+    _values 'writer options' \
+        {-c,--channel=}'[show configuration variables for another channel]'
+    ;;
+
+    (convert)
+    _values 'writer options' \
+        {-f,--flat}'[do not beautify the filelist.]'
+    ;;
+
+    (cvsdiff)
+    _values 'writer options' \
+        {-q,--quiet}'[Be quiet]' \
+        {-Q,--reallyquiet}'[Be really quiet]' \
+        {-D,--date=}'[Diff against revision of DATE]' \
+        {-R,--release=}'[Diff against tag for package release REL]' \
+        {-r,--revision=}'[Diff against revision REV]' \
+        {-c,--context}'[Generate context diff]' \
+        {-u,--unified}'[Generate unified diff]' \
+        {-i,--ignore-case}'[Ignore case, consider upper- and lower-case letters equivalent]' \
+        {-b,--ignore-whitespace}'[Ignore changes in amount of white space]' \
+        {-B,--ignore-blank-lines}'[Ignore changes that insert or delete blank lines]' \
+        '--brief[Report only whether the files differ, no details]' \
+        {-n,--dry-run}'[Don`t do anything, just pretend]'
+    ;;
+
+    (cvstag)
+    _values 'writer options' \
+        {-q,--quiet}'[Be quiet]' \
+        {-Q,--reallyquiet}'[Be really quiet]' \
+        {-F,--slide}'[Move (slide) tag if it exists]' \
+        {-D,--delete}'[Remove tag]' \
+        {-n,--dry-run}'[Don`t do anything, just pretend]' \
+    ;;
+
+    (download)
+    _values 'writer options' \
+        {-Z,--nocompress}'[download an uncompressed (.tar) file]'
+    ;;
+
+    (download-all)
+    _values 'writer options' \
+        {-c,--channel=}'[specify a channel other than the default channel]'
+    ;;
+
+    (install)
+    _values 'writer options' \
+        {-f,--force}'[will overwrite newer installed packages]' \
+        {-l,--loose}'[do not check for recommended dependency version]' \
+        {-n,--nodeps}'[ignore dependencies, install anyway]' \
+        {-r,--register-only}'[do not install files, only register the package as installed]' \
+        {-s,--soft}'[soft install, fail silently, or upgrade if already installed]' \
+        {-B,--nobuild}'[don`t build C extensions]' \
+        {-Z,--nocompress}'[request uncompressed files when downloading]' \
+        {-R,--installroot=}'[root directory used when installing files (ala PHP`s INSTALL_ROOT), use packagingroot for RPM]' \
+        {-P,--packagingroot=}'[root directory used when packaging files, like RPM packaging]' \
+        {-a,--alldeps}'[install all required and optional dependencies]' \
+        {-o,--onlyreqdeps}'[install all required dependencies]' \
+        {-O,--offline}'[do not attempt to download any urls or contact channels]' \
+        {-p,--pretend}'[Only list the packages that would be downloaded]' \
+        '--ignore-errors[force install even if there were errors]' \
+        '-D[OPTION1=VALUE\[ OPTION2=VALUE\], --configureoptions=OPTION1=VALUE\[ OPTION2=VALUE\]space-delimited list of configure options]'
+    ;;
+
+    (list)
+    _values 'writer options' \
+        {-c,--channel=}'[list installed packages from this channel]' \
+        {-a,--allchannels}'[list installed packages from all channels]' \
+        {-i,--channelinfo}'[output fully channel-aware data, even on failure]'
+    ;;
+
+    (list-all)
+    _values 'writer options' \
+        {-c,--channel=}'[list installed packages from this channel]' \
+        {-i,--channelinfo}'[output fully channel-aware data, even on failure]'
+    ;;
+
+    (list-upgrades)
+    _values 'writer options' \
+        {-i,--channelinfo}'[output fully channel-aware data, even on failure]'
+    ;;
+
+    (makerpm)
+    _values 'writer options' \
+        {-t,--spec-template=}'[Use FILE as RPM spec file template]' \
+        {-p,--rpm-pkgname=}'[Use FORMAT as format string for RPM package name, %s is replaced by the PEAR package name, defaults to "PEAR::%s".]'
+    ;;
+
+    (package|pickle)
+    _values 'writer options' \
+        {-Z,--nocompress}'[Do not gzip the package file]' \
+        {-n,--showname}'[Print the name of the packaged file.]'
+    ;;
+
+    (remote-list)
+    _values 'writer options' \
+        {-c,--channel=}'[specify a channel other than the default channel]'
+    ;;
+
+    (run-tests)
+    _values 'writer options' \
+        {-r,--recur}'[Run tests in child directories, recursively.  4 dirs deep maximum]' \
+        {-i,--ini=}'[actual string of settings to pass to php in format " -d setting=blah"]' \
+        {-l,--realtimelog}'[Log test runs/results as they are run]' \
+        {-q,--quiet}'[Only display detail for failed tests]' \
+        {-s,--simple}'[Display simple output for all tests]' \
+        {-p,--package}'[Treat parameters as installed packages from which to run tests]' \
+        {-u,--phpunit}'[Search parameters for AllTests.php, and use that to run phpunit-based tests If none is found, all .phpt tests will be tried instead.]' \
+        {-t,--tapoutput}'[Output run-tests.log in TAP-compliant format]' \
+        {-c,--cgi=}'[CGI php executable (needed for tests with POST/GET section)]' \
+        {-x,--coverage}'[Generate a code coverage report (requires Xdebug 2.0.0+)]' \
+        {-d,--showdiff}'[Output diff on test failure]'
+    ;;
+
+    (search)
+    _values 'writer options' \
+        {-c,--channel=}'[specify a channel other than the default channel]' \
+        {-a,--allchannels}'[search packages from all known channels]' \
+        {-i,--channelinfo}'[output fully channel-aware data, even on failure]'
+    ;;
+
+    (sign)
+    _values 'writer options' \
+        {-v,--verbose}'[Display GnuPG output]'
+    ;;
+
+    (svntag)
+    _values 'writer options' \
+        {-q,--quiet}'[Be quiet]' \
+        {-F,--slide}'[Move (slide) tag if it exists]' \
+        {-d,--delete}'[Remove tag]' \
+        {-n,--dry-run}'[Don`t do anything, just pretend]'
+    ;;
+
+    (uninstall)
+    _values 'writer options' \
+        {-n,--nodeps}'[ignore dependencies, uninstall anyway]' \
+        {-r,--register-only}'[do not remove files, only register the packages as not installed]' \
+        {-R,--installroot=}'[root directory used when installing files (ala PHP`s INSTALL_ROOT)]' \
+        {-O,--offline}'[do not attempt to uninstall remotely]' \
+        '--ignore-errors[force install even if there were errors]'
+    ;;
+
+    (upgrade)
+    _values 'writer options' \
+        {-c,--channel=}'[upgrade packages from a specific channel]' \
+        {-f,--force}'[overwrite newer installed packages]' \
+        {-l,--loose}'[do not check for recommended dependency version]' \
+        {-n,--nodeps}'[ignore dependencies, upgrade anyway]' \
+        {-r,--register-only}'[do not install files, only register the package as upgraded]' \
+        {-B,--nobuild}'[don`t build C extensions]' \
+        {-Z,--nocompress}'[request uncompressed files when downloading]' \
+        {-R,--installroot=}'[root directory used when installing files (ala PHP`s INSTALL_ROOT)]' \
+        {-a,--alldeps}'[install all required and optional dependencies]' \
+        {-o,--onlyreqdeps}'[install all required dependencies]' \
+        {-O,--offline}'[do not attempt to download any urls or contact channels]' \
+        {-p,--pretend}'[Only list the packages that would be downloaded]' \
+        '--ignore-errors[force install even if there were errors]'
+    ;;
+
+    (upgrade-all)
+    _values 'writer options' \
+        {-c,--channel=}'[upgrade packages from a specific channel]' \
+        {-n,--nodeps}'[ignore dependencies, upgrade anyway]' \
+        {-r,--register-only}'[do not install files, only register the package as upgraded]' \
+        {-B,--nobuild}'[don`t build C extensions]' \
+        {-Z,--nocompress}'[request uncompressed files when downloading]' \
+        {-R,--installroot=}'[root directory used when installing files (ala PHP`s INSTALL_ROOT), use packagingroot for RPM]' \
+        '--ignore-errors[force install even if there were errors]' \
+        '--loose[do not check for recommended dependency version]'
+    ;;
+}
